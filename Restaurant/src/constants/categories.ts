@@ -1,4 +1,4 @@
-import { Category } from "../types/menu";
+import { Category } from "../types/menu.type";
 
 export const CATEGORIES: Category[] = [
   "MEALS",

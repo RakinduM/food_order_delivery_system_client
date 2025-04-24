@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Switch } from './ui/switch';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from './ui/dialog';
 import { CATEGORIES, PORTION_SIZES, CATEGORY_LABELS, PORTION_LABELS } from '../constants/categories';
-import { MenuItem, Category } from '../types/menu';
+import { MenuItem, Category } from '../types/menu.type';
 
 interface AddMenuItemDialogProps {
     onAdd: (item: Omit<MenuItem, 'id' | 'createdAt'>) => void;

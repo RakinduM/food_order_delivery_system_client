@@ -1,6 +1,6 @@
 import { Switch } from './ui/switch';
 import { CATEGORY_LABELS, PORTION_LABELS } from '../constants/categories';
-import { MenuItem, PortionSize } from '../types/menu';
+import { MenuItem } from '../types/menu.type';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './ui/card';
 
 interface MenuItemCardProps {
