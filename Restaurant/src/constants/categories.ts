@@ -1,17 +1,13 @@
-import { Category } from "../types/menu.type";
+// constants/categories.ts
+type MenuItemCategory =
+  | "MEALS"
+  | "BOWLS"
+  | "DESSERTS"
+  | "BEVERAGES"
+  | "SIDES"
+  | "OTHERS";
 
-export const CATEGORIES: Category[] = [
-  "MEALS",
-  "BOWLS",
-  "DESSERTS",
-  "BEVERAGES",
-  "SIDES",
-  "OTHERS",
-];
-
-export const PORTION_SIZES = ["REGULAR", "MEDIUM", "LARGE"] as const;
-
-export const CATEGORY_LABELS: Record<Category, string> = {
+export const CATEGORY_LABELS: Record<MenuItemCategory, string> = {
   MEALS: "Meals",
   BOWLS: "Bowls",
   DESSERTS: "Desserts",
@@ -20,8 +16,13 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   OTHERS: "Others",
 };
 
-export const PORTION_LABELS: Record<"REGULAR" | "MEDIUM" | "LARGE", string> = {
+type MenuItemPortion = "REGULAR" | "MEDIUM" | "LARGE";
+
+export const PORTION_LABELS: Record<MenuItemPortion, string> = {
   REGULAR: "Regular",
   MEDIUM: "Medium",
   LARGE: "Large",
 };
+
+export const CATEGORIES = Object.keys(CATEGORY_LABELS) as MenuItemCategory[];
+export const PORTION_SIZES = Object.keys(PORTION_LABELS) as MenuItemPortion[];

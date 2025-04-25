@@ -1,75 +1,108 @@
+// hooks/useMenuItems.ts
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { MenuItem } from "@/types/menu.type";
+import { MenuItem, MenuItemRequest } from "../types/menu.type";
 
-export const useMenuItems = () => {
+const API_URL = import.meta.env.VITE_API_URL;
+
+export const useMenuItems = (restaurantId: string) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState("");
 
-  // Fetch all menu items
   const fetchMenuItems = async () => {
-    setIsLoading(true);
-    setError(null);
     try {
-      const response = await axios.get("/api/menu-items");
-      setMenuItems(response.data);
-    } catch (err) {
-      console.error("Failed to fetch menu items:", err);
-      setError("Failed to load menu items. Please try again later.");
+      const { data } = await axios.get<MenuItem[]>(`${API_URL}/menu-items`);
+      setMenuItems(data);
+      setError("");
+    } catch {
+      setError("Failed to load menu items");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Initial fetch
   useEffect(() => {
     fetchMenuItems();
-  }, []);
+  }, [restaurantId]);
 
-  // Add new menu item
-  const addMenuItem = async (newItem: Omit<MenuItem, "id" | "createdAt">) => {
+  const addMenuItem = async (item: MenuItemRequest) => {
     try {
-      const response = await axios.post("/api/menu-items", newItem);
-      setMenuItems((prev) => [...prev, response.data]);
-      return response.data;
-    } catch (err) {
-      console.error("Failed to add menu item:", err);
-      throw err;
-    }
-  };
-
-  // Update menu item
-  const updateMenuItem = async (id: string, updates: Partial<MenuItem>) => {
-    try {
-      const response = await axios.patch(`/api/menu-items/${id}`, updates);
-      setMenuItems((prev) =>
-        prev.map((item) =>
-          item.id === id ? { ...item, ...response.data } : item
-        )
+      const { data } = await axios.post<MenuItem>(
+        `${API_URL}/menu-items`,
+        item
       );
-    } catch (err) {
-      console.error("Failed to update menu item:", err);
-      throw err;
+      setMenuItems((prev) => [...prev, data]);
+      return true;
+    } catch {
+      setError("Failed to add menu item");
+      return false;
     }
   };
 
-  // Filter menu items based on search term
-  const filteredItems = menuItems.filter(
-    (item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const updateMenuItem = async (
+    id: string,
+    updates: Partial<MenuItemRequest>
+  ) => {
+    try {
+      const { data } = await axios.put<MenuItem>(
+        `${API_URL}/menu-items/${id}`,
+        updates
+      );
+      setMenuItems((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, ...data } : item))
+      );
+      return true;
+    } catch {
+      setError("Failed to update menu item");
+      return false;
+    }
+  };
+
+  const updateAvailability = async (id: string, isAvailable: boolean) => {
+    try {
+      const { data } = await axios.patch<MenuItem>(
+        `${API_URL}/menu-items/${id}/availability`,
+        null,
+        { params: { isAvailable } }
+      );
+      setMenuItems((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, ...data } : item))
+      );
+      return true;
+    } catch (err) {
+      setError("Failed to update availability");
+      console.error("Error updating availability:", err);
+      return false;
+    }
+  };
+
+  const deleteMenuItem = async (id: string) => {
+    try {
+      await axios.delete(`${API_URL}/menu-items/${id}`);
+      setMenuItems((prev) => prev.filter((item) => item.id !== id));
+      return true;
+    } catch {
+      setError("Failed to delete menu item");
+      return false;
+    }
+  };
+
+  const filteredItems = menuItems.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return {
     menuItems: filteredItems,
     addMenuItem,
     updateMenuItem,
+    updateAvailability,
+    deleteMenuItem,
     searchTerm,
     setSearchTerm,
     isLoading,
     error,
-    refetch: fetchMenuItems, // Optional: in case you need to refresh the data
+    retry: fetchMenuItems,
   };
 };
