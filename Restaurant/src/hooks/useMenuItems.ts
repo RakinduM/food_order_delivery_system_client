@@ -1,4 +1,3 @@
-// hooks/useMenuItems.ts
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { MenuItem, MenuItemRequest } from "../types/menu.type";
@@ -44,7 +43,7 @@ export const useMenuItems = (restaurantId: string) => {
   const updateMenuItem = async (
     id: string,
     updates: Partial<MenuItemRequest>
-  ) => {
+  ): Promise<void> => {
     try {
       const { data } = await axios.put<MenuItem>(
         `${API_URL}/menu-items/${id}`,
@@ -53,10 +52,10 @@ export const useMenuItems = (restaurantId: string) => {
       setMenuItems((prev) =>
         prev.map((item) => (item.id === id ? { ...item, ...data } : item))
       );
-      return true;
-    } catch {
+      console.log("Menu item updated successfully");
+    } catch (error) {
       setError("Failed to update menu item");
-      return false;
+      console.error("Error updating menu item:", error);
     }
   };
 

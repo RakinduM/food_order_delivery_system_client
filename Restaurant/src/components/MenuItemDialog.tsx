@@ -1,6 +1,4 @@
-// components/MenuItemDialog.tsx
-import { useState, useRef, useEffect } from 'react';
-//import { Upload } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -8,13 +6,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Switch } from './ui/switch';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
 import { CATEGORIES, PORTION_SIZES, CATEGORY_LABELS, PORTION_LABELS } from '../constants/categories';
-import { MenuItem, MenuItemRequest } from '../types/menu.type';
-import { MenuItemCategory, MenuItemPortion } from '../types/menu.type';
+import { MenuItem, MenuItemRequest, MenuItemCategory, MenuItemPortion } from '../types/menu.type';
 
 interface MenuItemDialogProps {
     restaurantId: string;
     item?: MenuItem;
     onSubmit: (item: MenuItemRequest) => Promise<boolean>;
+    onClose?: () => void;
     children?: React.ReactNode;
 }
 
@@ -22,12 +20,11 @@ export const MenuItemDialog = ({
     restaurantId,
     item,
     onSubmit,
+    onClose,
     children
 }: MenuItemDialogProps) => {
     const [open, setOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    //const fileInputRef = useRef<HTMLInputElement>(null);
-    //const [previewImage, setPreviewImage] = useState(item?.imageUrl || '');
 
     const [formData, setFormData] = useState<MenuItemRequest>({
         restaurantId,
@@ -52,22 +49,15 @@ export const MenuItemDialog = ({
                 category: item.category,
                 is_available: item.is_available
             });
-            //setPreviewImage(item.imageUrl);
         }
     }, [item, restaurantId]);
 
-    // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const file = e.target.files?.[0];
-    //     if (file) {
-    //         const reader = new FileReader();
-    //         reader.onloadend = () => {
-    //             const result = reader.result as string;
-    //             setPreviewImage(result);
-    //             setFormData(prev => ({ ...prev, imageUrl: result }));
-    //         };
-    //         reader.readAsDataURL(file);
-    //     }
-    // };
+    const handleOpenChange = (open: boolean) => {
+        setOpen(open);
+        if (!open && onClose) {
+            onClose();
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -86,17 +76,13 @@ export const MenuItemDialog = ({
                     category: 'MEALS',
                     is_available: true
                 });
-                // setPreviewImage('');
-                // if (fileInputRef.current) {
-                //     fileInputRef.current.value = '';
-                // }
             }
         }
         setIsSubmitting(false);
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={handleOpenChange}>
             {children && <DialogTrigger asChild>{children}</DialogTrigger>}
             <DialogContent className="sm:max-w-[600px]">
                 <DialogHeader>
@@ -128,53 +114,19 @@ export const MenuItemDialog = ({
                             required
                         />
                     </div>
+
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="imageUrl" className="text-right">
-                            Image
+                            Image URL
                         </Label>
                         <Input
-                            id="image"
+                            id="imageUrl"
                             value={formData.imageUrl}
                             onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                             className="col-span-3"
                             required
                         />
                     </div>
-
-                    {/* <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="image" className="text-right">
-                            Image
-                        </Label>
-                        <div className="col-span-3 space-y-2">
-                            <input
-                                ref={fileInputRef}
-                                id="image"
-                                type="text" // This is a workaround to allow file input
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                className="hidden"
-                                title="Upload an image for the menu item"
-                            />
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => fileInputRef.current?.click()}
-                                className="w-full"
-                            >
-                                <Upload className="mr-2 h-4 w-4" />
-                                Upload Image
-                            </Button>
-                            {previewImage && (
-                                <div className="mt-2">
-                                    <img
-                                        src={previewImage}
-                                        alt="Preview"
-                                        className="h-32 w-32 object-cover rounded-md border"
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </div> */}
 
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="price" className="text-right">

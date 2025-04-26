@@ -106,19 +106,8 @@ export default function RestaurantDashboard({ restaurantId }: Props) {
                                 key={item.id}
                                 item={item}
                                 onAvailabilityChange={updateAvailability}
-                                onEdit={() => (
-                                    <MenuItemDialog
-                                        restaurantId={restaurantId}
-                                        item={item}
-                                        onSubmit={async (updatedItem) =>
-                                            updateMenuItem(item.id, updatedItem)
-                                        }
-                                    >
-                                        <Button variant="ghost" size="sm">
-                                            Edit
-                                        </Button>
-                                    </MenuItemDialog>
-                                )}
+                                restaurantId={restaurantId}
+                                updateMenuItem={updateMenuItem}
                                 onDelete={() => handleDeleteClick(item.id, item.name)}
                             />
                         ))}

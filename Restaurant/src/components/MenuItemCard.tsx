@@ -3,19 +3,23 @@ import { Switch } from './ui/switch';
 import { CATEGORY_LABELS, PORTION_LABELS } from '../constants/categories';
 import { MenuItem } from '../types/menu.type';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './ui/card';
-import { Pencil, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { Button } from './ui/button';
+import { MenuItemDialog } from './MenuItemDialog';
 
 interface MenuItemCardProps {
     item: MenuItem;
-    onEdit: () => void;
+    restaurantId: string;
+    updateMenuItem: (id: string, updatedItem: any) => Promise<void>;
     onDelete: () => void;
     onAvailabilityChange: (id: string, isAvailable: boolean) => Promise<boolean>;
 }
 
 export const MenuItemCard = ({
     item,
-    onEdit,
+    restaurantId,
+    updateMenuItem,
     onDelete,
     onAvailabilityChange
 }: MenuItemCardProps) => {
@@ -34,6 +38,19 @@ export const MenuItemCard = ({
             console.error(`Error updating availability for item ${item.name}:`, error);
         } finally {
             setIsUpdating(false);
+        }
+    };
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleEditSubmit = async (updatedItem: any): Promise<boolean> => {
+        try {
+            await updateMenuItem(item.id, updatedItem);
+            setIsDialogOpen(false);
+            return true;
+        } catch (error) {
+            console.error('Error updating menu item:', error);
+            return false;
         }
     };
 
@@ -79,15 +96,24 @@ export const MenuItemCard = ({
                     </span>
                 </div>
                 <div className="flex gap-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={onEdit}
-                        disabled={isUpdating}
-                    >
-                        <Pencil className="h-4 w-4 mr-2" />
-                        Edit
-                    </Button>
+                    {/* Edit Button */}
+
+
+                    {/* MenuItemDialog */}
+                    <>
+                        {console.log('MenuItemDialog is rendering')}
+                        <MenuItemDialog
+                            restaurantId={restaurantId}
+                            item={item}
+                            onSubmit={handleEditSubmit}
+                            onClose={() => setIsDialogOpen(false)}>
+                            <Button className="bg-green-600 hover:bg-green-700 text-white"
+                            >
+                                <Pencil className="h-4 w-4 mr-2" />
+                                Edit
+                            </Button>
+                        </MenuItemDialog>
+                    </>
                     <Button
                         variant="destructive"
                         size="sm"
