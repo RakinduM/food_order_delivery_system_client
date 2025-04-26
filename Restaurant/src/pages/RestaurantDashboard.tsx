@@ -1,4 +1,5 @@
-// pages/RestaurantDashboard.tsx
+import { useState } from 'react';
+import { DeleteConfirmationDialog } from '@/components/DeleteConfirmationDialog';
 import { useMenuItems } from '@/hooks/useMenuItems';
 import { MenuItemCard } from '@/components/MenuItemCard';
 import { MenuItemDialog } from '@/components/MenuItemDialog';
@@ -23,6 +24,22 @@ export default function RestaurantDashboard({ restaurantId }: Props) {
         error,
         retry
     } = useMenuItems(restaurantId);
+
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
+
+    const handleDeleteClick = (id: string, name: string) => {
+        setItemToDelete({ id, name });
+        setDeleteDialogOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (itemToDelete) {
+            await deleteMenuItem(itemToDelete.id);
+            setDeleteDialogOpen(false);
+            setItemToDelete(null);
+        }
+    };
 
     // const handleAvailabilityChange = async (id: string, isAvailable: boolean) => {
     //     try {
@@ -102,15 +119,17 @@ export default function RestaurantDashboard({ restaurantId }: Props) {
                                         </Button>
                                     </MenuItemDialog>
                                 )}
-                                onDelete={() => {
-                                    if (confirm('Are you sure you want to delete this item?')) {
-                                        deleteMenuItem(item.id);
-                                    }
-                                }}
+                                onDelete={() => handleDeleteClick(item.id, item.name)}
                             />
                         ))}
                     </div>
                 )}
+                <DeleteConfirmationDialog
+                    open={deleteDialogOpen}
+                    onOpenChange={setDeleteDialogOpen}
+                    onConfirm={handleConfirmDelete}
+                    itemName={itemToDelete?.name || ''}
+                />
             </div>
         </div>
     );
