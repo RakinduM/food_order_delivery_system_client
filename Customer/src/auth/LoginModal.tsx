@@ -8,17 +8,17 @@ interface LoginModalProps {
 }
 
 export function LoginModal({ onClose, onSwitchToRegister }: LoginModalProps) {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(email, password);
+      await login(username, password);
       onClose();
     } catch (error) {
-      console.error(error);
+      console.error("Login failed:", error);
     }
   };
 
@@ -35,12 +35,12 @@ export function LoginModal({ onClose, onSwitchToRegister }: LoginModalProps) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              Username
             </label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md"
               required
             />
