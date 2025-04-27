@@ -39,7 +39,7 @@ const Delivery: React.FC = () => {
 
             {/* Page Title */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0">
-              <h1 className="text-3xl font-bold text-gray-900">Deliveries හිරුනි</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Deliveries</h1>
             </div>
 
             {/* Deliveries Grid */}
