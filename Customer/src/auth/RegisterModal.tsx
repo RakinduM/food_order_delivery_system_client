@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { XIcon } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -14,47 +14,77 @@ export function RegisterModal({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { register} = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const { register } = useAuth();
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Automatically focus on the name input when the modal opens
+    nameInputRef.current?.focus();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null); // Clear previous errors
     try {
       await register(email, password, name);
       onClose();
     } catch (error) {
+      setError("Registration failed. Please try again.");
       console.error(error);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      role="dialog"
+      aria-labelledby="register-modal-title"
+      aria-modal="true"
+    >
       <div className="bg-white rounded-lg p-8 max-w-md w-full relative">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          aria-label="Close registration modal"
         >
           <XIcon className="h-6 w-6" />
         </button>
-        <h2 className="text-2xl font-bold mb-6">Register</h2>
+        <h2 id="register-modal-title" className="text-2xl font-bold mb-6">
+          Register
+        </h2>
+        {error && (
+          <div className="mb-4 text-red-600 text-sm">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Name
             </label>
             <input
+              id="name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              ref={nameInputRef}
               className="w-full px-3 py-2 border border-gray-300 rounded-md"
               required
             />
           </div>
-          
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Email
             </label>
             <input
+              id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -62,12 +92,15 @@ export function RegisterModal({
               required
             />
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Password
             </label>
             <input
+              id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
