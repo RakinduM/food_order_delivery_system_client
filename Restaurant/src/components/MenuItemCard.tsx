@@ -101,7 +101,6 @@ export const MenuItemCard = ({
 
                     {/* MenuItemDialog */}
                     <>
-                        {console.log('MenuItemDialog is rendering')}
                         <MenuItemDialog
                             restaurantId={restaurantId}
                             item={item}
