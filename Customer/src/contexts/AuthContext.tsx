@@ -22,12 +22,14 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
   const login = async (username: string, password: string) => {
     try {
-      const response = await axios.post('http://localhost:8089/api/auth/login', { username, password });
+      const response = await axios.post(`${API_URL}/auth/login`, { username, password });
       const { token, username: responseUsername } = response.data;
 
       // Save token and username to local storage
@@ -50,7 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string
   ) => {
     try {
-      const response = await axios.post('http://localhost:8089/api/auth/register', {
+      const response = await axios.post(`${API_URL}/auth/register`, {
         firstName,
         lastName,
         username,
