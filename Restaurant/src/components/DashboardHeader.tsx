@@ -10,6 +10,8 @@ interface DashboardHeaderProps {
   setSearchTerm: (value: string) => void;
   addMenuItem: (item: any) => void;
   handleLogout: () => void;
+  onViewMenuItems: () => void;
+  onViewOrders: () => void;
 }
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
@@ -18,6 +20,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   setSearchTerm,
   addMenuItem,
   handleLogout,
+  onViewMenuItems,
+  onViewOrders,
 }) => {
   const { getRestaurantDetails } = useAuth();
   const [restaurantName, setRestaurantName] = useState<string>("");
@@ -42,11 +46,23 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         </h1>
         <div className="flex gap-4 w-full sm:w-auto">
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
+          <Button
+            onClick={onViewMenuItems}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            View Menu Items
+          </Button>
           <MenuItemDialog restaurantId={restaurantId} onSubmit={addMenuItem}>
             <Button className="bg-green-600 hover:bg-green-700 text-white">
-              Add New Item
+              Add Menu Item
             </Button>
           </MenuItemDialog>
+          <Button
+            onClick={onViewOrders}
+            className="bg-yellow-600 hover:bg-yellow-700 text-white"
+          >
+            View Orders
+          </Button>
           <Button
             onClick={handleLogout}
             className="bg-red-600 hover:bg-red-700 text-white"

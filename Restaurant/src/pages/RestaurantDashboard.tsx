@@ -6,6 +6,7 @@ import { DashboardHeader } from "@/components/DashboardHeader";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   restaurantId: string;
@@ -24,6 +25,8 @@ export default function RestaurantDashboard({ restaurantId }: Props) {
     error,
     retry,
   } = useMenuItems(restaurantId);
+
+  const navigate = useNavigate();
 
   const { logout } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -55,6 +58,17 @@ export default function RestaurantDashboard({ restaurantId }: Props) {
   const handleLogout = () => {
     logout();
     setIsLoggedIn(false);
+  };
+
+  const handleViewMenuItems = () => {
+    console.log("View Menu Items clicked");
+    // Add logic to navigate or display menu items
+  };
+
+  const handleViewOrders = () => {
+    console.log("View Orders clicked");
+    navigate("/orders");
+    // Add logic to navigate or display orders
   };
 
   if (!isLoggedIn) {
@@ -114,6 +128,8 @@ export default function RestaurantDashboard({ restaurantId }: Props) {
           setSearchTerm={setSearchTerm}
           addMenuItem={addMenuItem}
           handleLogout={handleLogout}
+          onViewMenuItems={handleViewMenuItems}
+          onViewOrders={handleViewOrders}
         />
 
         {menuItems.length === 0 ? (

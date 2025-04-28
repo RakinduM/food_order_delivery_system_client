@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import RestaurantDashboard from './pages/RestaurantDashboard';
 import { LoginModal } from './pages/Login';
 import { RegisterModal } from './pages/Register';
+import OrdersPage from './pages/OrdersPage';
 
 const App: React.FC = () => {
   const getRestaurantId = () => {
@@ -18,6 +19,16 @@ const App: React.FC = () => {
             element={
               getRestaurantId() ? (
                 <RestaurantDashboard restaurantId={getRestaurantId()!} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+           <Route
+            path="/orders"
+            element={
+              getRestaurantId() ? (
+                <OrdersPage restaurantId={getRestaurantId()!} />
               ) : (
                 <Navigate to="/login" replace />
               )
