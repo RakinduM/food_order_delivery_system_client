@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/SearchBar";
 import { MenuItemDialog } from "@/components/MenuItemDialog";
@@ -19,20 +19,20 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   addMenuItem,
   handleLogout,
 }) => {
-  const { getRestaurantDetails, restaurantDetails } = useAuth();
+  const { getRestaurantDetails } = useAuth();
   const [restaurantName, setRestaurantName] = useState<string>("");
 
-  useEffect(() => {
-    const fetchRestaurantName = async () => {
-      const email = localStorage.getItem("email"); // Retrieve email from localStorage
-      if (email) {
-        const details = await getRestaurantDetails(email);
-        setRestaurantName(details?.restaurantName || "Restaurant Dashboard");
-      }
-    };
-
-    fetchRestaurantName();
+  const fetchRestaurantName = useCallback(async () => {
+    const email = localStorage.getItem("email"); // Retrieve email from localStorage
+    if (email) {
+      const details = await getRestaurantDetails(email);
+      setRestaurantName(details?.restaurantName || "Restaurant Dashboard");
+    }
   }, [getRestaurantDetails]);
+
+  useEffect(() => {
+    fetchRestaurantName();
+  }, [fetchRestaurantName]);
 
   return (
     <header className="mb-8">

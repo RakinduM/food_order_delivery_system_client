@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -49,7 +49,7 @@ export const useAuth = () => {
     }
   };
 
-  const getRestaurantDetails = async (email: string) => {
+  const getRestaurantDetails = useCallback(async (email: string) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -62,7 +62,7 @@ export const useAuth = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const logout = () => {
     localStorage.removeItem("token"); // Remove token from localStorage
