@@ -104,7 +104,7 @@ export default function RestaurantDashboard({ restaurantId }: Props) {
             <div className="max-w-7xl mx-auto">
                 <header className="mb-8">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                        <h1 className="text-3xl font-bold text-green-600">Restaurant Dashboard</h1>
+                        <h1 className="text-3xl font-bold text-green-600">Restaurant Dashboard {restaurantId}</h1>
                         <div className="flex gap-4 w-full sm:w-auto">
                             <SearchBar value={searchTerm} onChange={setSearchTerm} />
                             <MenuItemDialog restaurantId={restaurantId} onSubmit={addMenuItem}>
