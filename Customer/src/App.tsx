@@ -12,6 +12,8 @@ import { LoginModal } from "./auth/LoginModal";
 import { RegisterModal } from "./auth/RegisterModal";
 import { CartSidebar } from "./cart/CartSideBar";
 import { RestaurantProvider } from "./contexts/RestaurantContext";
+import { OrderProvider } from "./contexts/OrderContext";
+import { OrdersPage } from "./pages/OrderPage";
 
 function Home({
   searchQuery,
@@ -59,6 +61,7 @@ export function App() {
   return (
     <AuthProvider>
       <RestaurantProvider>
+        <OrderProvider>
         <CartProvider>
           <BrowserRouter>
             <div className="min-h-screen bg-gray-50">
@@ -79,6 +82,7 @@ export function App() {
                   }
                 />
                 <Route path="/restaurant/:id" element={<RestaurantDetail />} />
+                <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/order-summary/:id" element={<OrderSummary />} /> {/* New Route */}
               </Routes>
               {showLogin && (
@@ -107,6 +111,7 @@ export function App() {
             </div>
           </BrowserRouter>
         </CartProvider>
+        </OrderProvider>
       </RestaurantProvider>
     </AuthProvider>
   );
