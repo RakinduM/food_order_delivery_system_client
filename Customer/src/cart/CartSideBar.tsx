@@ -2,6 +2,7 @@ import React from "react";
 import { XIcon, MinusIcon, PlusIcon, ShoppingBagIcon } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -14,11 +15,23 @@ export function CartSidebar({
   onClose,
   onLoginClick,
 }: CartSidebarProps) {
-
   const { items, removeItem, updateQuantity, total } = useCart();
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
+
+  // Extract the restaurantId from the first item in the cart
+  const restaurantId = items.length > 0 ? items[0].restaurantId : null;
+
+  const handleProceedToOrder = () => {
+    if (restaurantId) {
+      navigate(`/order-summary/${restaurantId}`); // Pass the restaurantId in the URL
+    } else {
+      console.error("No restaurant ID found in the cart.");
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50">
       <div
@@ -98,8 +111,11 @@ export function CartSidebar({
                 <span className="font-medium">${total.toFixed(2)}</span>
               </div>
               {isAuthenticated ? (
-                <button className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700">
-                  Proceed to Checkout
+                <button
+                  onClick={handleProceedToOrder} // Navigate to order summary
+                  className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700"
+                >
+                  Proceed to Order
                 </button>
               ) : (
                 <button

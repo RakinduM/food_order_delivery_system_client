@@ -3,6 +3,7 @@ import axios from 'axios';
 
 interface User {
   username: string;
+  id: string;
 }
 
 interface AuthContextType {
@@ -30,13 +31,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string) => {
     try {
       const response = await axios.post(`${API_URL}/auth/login`, { username, password });
-      const { token, username: responseUsername } = response.data;
+      const { token, username: responseUsername, id: responseId } = response.data;
 
       // Save token and username to local storage
       localStorage.setItem('token', token);
       localStorage.setItem('username', responseUsername);
 
-      setUser({ username: responseUsername });
+      setUser({ username: responseUsername, id: responseId });
     } catch (error) {
       console.error('Login failed:', error);
       throw new Error('Login failed');
@@ -60,13 +61,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         phoneNumber,
         password,
       });
-      const { token, username: responseUsername } = response.data;
+      const { token, username: responseUsername, id: responseId } = response.data;
 
       // Save token and username to local storage
       localStorage.setItem('token', token);
       localStorage.setItem('username', responseUsername);
 
-      setUser({ username: responseUsername });
+      setUser({ username: responseUsername, id: responseId });
     } catch (error) {
       console.error('Registration failed:', error);
       throw new Error('Registration failed');

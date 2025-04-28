@@ -4,6 +4,7 @@ import { Header } from "./components/Header";
 import { Categories } from "./restaurant/Categories";
 import { RestaurantList } from "./restaurant/RestaurantList";
 import { RestaurantDetail } from "./restaurant/RestaurantDetail";
+import { OrderSummary } from "./pages/OrderSummary"; // Import the OrderSummary component
 import { restaurants, categories } from "./utils/mockData";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
@@ -78,6 +79,7 @@ export function App() {
                   }
                 />
                 <Route path="/restaurant/:id" element={<RestaurantDetail />} />
+                <Route path="/order-summary/:id" element={<OrderSummary />} /> {/* New Route */}
               </Routes>
               {showLogin && (
                 <LoginModal
