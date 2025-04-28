@@ -1,11 +1,12 @@
 import React from "react";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import axios from "axios";
 
+const ORDERS_API_URL = import.meta.env.VITE_API_ORDER_URL; // Replace with your Orders API URL
 const STRIPE_API_KEY = import.meta.env.VITE_API_STRIPE_URL; // Replace with your Stripe API key
 // Initialize Stripe with your public key
 const STRIP_PUBLIC_KEY = import.meta.env.VITE_STRIPE_KEY; // Replace with your Stripe public key
@@ -114,11 +115,16 @@ export function OrderSummary() {
 }
 
 function PaymentForm({ total }: { total: number }) {
+  const { items } = useCart(); // Access cart items
+  const { user } = useAuth(); // Access logged-in user details
+  const { id: restaurantId } = useParams<{ id: string }>(); // Get restaurant ID
+  const navigate = useNavigate(); // For navigation
+
   const handlePayment = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
-      // Create a payment session on the server using Axios
+      // Step 1: Create a payment session on the server
       const response = await axios.post(`${STRIPE_API_KEY}/checkout`, {
         amount: total * 100, // Stripe expects the amount in cents
         quantity: 1, // Default quantity
@@ -133,12 +139,35 @@ function PaymentForm({ total }: { total: number }) {
       if (status === "SUCCESS" && sessionUrl) {
         // Redirect to the Stripe Checkout page
         window.location.href = sessionUrl;
+
+        // Step 2: After successful payment, create the order
+        const orderResponse = await axios.post(`${ORDERS_API_URL}/orders`, {
+          customerId: user?.id, // Logged-in customer ID
+          restaurantId: restaurantId, // Restaurant ID
+          status: "PLACED", // Order status
+          totalAmount: total, // Total amount
+          customerLatitude: 6.902191, // Default latitude
+          customerLongitude: 80.087579, // Default longitude
+          restaurantLatitude: 6.913008, // Default latitude
+          restaurantLongitude: 80.095885, // Default longitude
+          items: items.map((item) => ({
+            menuItemId: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        });
+
+        console.log("Order created:", orderResponse.data);
+
+        // Step 3: Redirect to the home page
+        navigate("/");
       } else {
         console.error("Failed to create payment session:", message || "Unknown error");
         alert("Failed to create payment session. Please try again.");
       }
     } catch (error) {
-      console.error("Error creating payment session:", error);
+      console.error("Error creating payment session or order:", error);
       alert("An error occurred while processing your payment. Please try again.");
     }
   };
