@@ -25,6 +25,7 @@ export const MenuItemDialog = ({
 }: MenuItemDialogProps) => {
     const [open, setOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const [formData, setFormData] = useState<MenuItemRequest>({
         restaurantId,
@@ -59,27 +60,70 @@ export const MenuItemDialog = ({
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const uploadImageToBucket = async (file: File) => {
+        try {
+          const bucketName = import.meta.env.VITE_BUCKET_NAME; // Replace with your bucket name
+          const fileName = `${Date.now()}-${file.name}`; // Generate a unique file name
+          const uploadUrl = `https://storage.googleapis.com/${bucketName}/${fileName}`;
+
+          const response = await fetch(uploadUrl, {
+            method: "PUT",
+            body: file,
+            headers: {
+              "Content-Type": file.type, // Set the correct content type
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to upload image. Status: ${response.status}`);
+          }
+
+          // Return the public URL of the uploaded file
+          const publicUrl = `https://storage.googleapis.com/${bucketName}/${fileName}`;
+          return publicUrl;
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          throw error;
+        }
+      };
+
+      const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        const success = await onSubmit(formData);
-        if (success) {
+
+        try {
+          let uploadedImageUrl = formData.imageUrl;
+
+          if (imageFile) {
+            uploadedImageUrl = await uploadImageToBucket(imageFile);
+          }
+
+          const success = await onSubmit({
+            ...formData,
+            imageUrl: uploadedImageUrl,
+          });
+
+          if (success) {
             setOpen(false);
             if (!item) {
-                setFormData({
-                    restaurantId,
-                    name: '',
-                    description: '',
-                    imageUrl: '',
-                    price: 0,
-                    portion: 'REGULAR',
-                    category: 'MEALS',
-                    is_available: true
-                });
+              setFormData({
+                restaurantId,
+                name: "",
+                description: "",
+                imageUrl: "",
+                price: 0,
+                portion: "REGULAR",
+                category: "MEALS",
+                is_available: true,
+              });
             }
+          }
+        } catch (error) {
+          console.error("Error submitting form:", error);
+        } finally {
+          setIsSubmitting(false);
         }
-        setIsSubmitting(false);
-    };
+      };
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -117,14 +161,19 @@ export const MenuItemDialog = ({
 
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="imageUrl" className="text-right">
-                            Image URL
+                            Image Upload
                         </Label>
                         <Input
                             id="imageUrl"
-                            value={formData.imageUrl}
-                            onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files ? e.target.files[0] : null;
+                                if (file) {
+                                    setImageFile(file);
+                                }
+                            }}
                             className="col-span-3"
-                            required
                         />
                     </div>
 

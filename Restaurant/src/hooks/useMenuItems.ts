@@ -11,10 +11,13 @@ export const useMenuItems = (restaurantId: string) => {
   const [error, setError] = useState("");
 
   const fetchMenuItems = async () => {
+    setIsLoading(true);
+    setError("");
     try {
-      const { data } = await axios.get<MenuItem[]>(`${API_URL}/menu-items`);
+      const { data } = await axios.get<MenuItem[]>(
+        `${API_URL}/menu-items/restaurant/${restaurantId}`
+      );
       setMenuItems(data);
-      setError("");
     } catch {
       setError("Failed to load menu items");
     } finally {
@@ -23,7 +26,9 @@ export const useMenuItems = (restaurantId: string) => {
   };
 
   useEffect(() => {
-    fetchMenuItems();
+    if (restaurantId) {
+      fetchMenuItems();
+    }
   }, [restaurantId]);
 
   const addMenuItem = async (item: MenuItemRequest) => {
@@ -88,9 +93,11 @@ export const useMenuItems = (restaurantId: string) => {
     }
   };
 
-  const filteredItems = menuItems.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredItems = Array.isArray(menuItems)
+    ? menuItems.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
 
   return {
     menuItems: filteredItems,
