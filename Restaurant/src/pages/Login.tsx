@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { XIcon } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+
 
 interface LoginModalProps {
   onClose: () => void;
@@ -11,6 +13,7 @@ export function LoginModal({ onClose, onSwitchToRegister }: LoginModalProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, isLoading, error } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,6 +21,7 @@ export function LoginModal({ onClose, onSwitchToRegister }: LoginModalProps) {
     if (success) {
       onClose();
     }
+    navigate("/");
   };
 
   return (

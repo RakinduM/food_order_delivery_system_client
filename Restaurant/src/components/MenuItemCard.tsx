@@ -107,7 +107,9 @@ export const MenuItemCard = ({
                             item={item}
                             onSubmit={handleEditSubmit}
                             onClose={() => setIsDialogOpen(false)}>
-                            <Button className="bg-green-600 hover:bg-green-700 text-white"
+                            <Button
+                                variant="secondary"
+                                size="sm"
                             >
                                 <Pencil className="h-4 w-4 mr-2" />
                                 Edit
