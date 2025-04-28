@@ -88,9 +88,11 @@ export const useMenuItems = (restaurantId: string) => {
     }
   };
 
-  const filteredItems = menuItems.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredItems = Array.isArray(menuItems)
+  ? menuItems.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  : [];
 
   return {
     menuItems: filteredItems,

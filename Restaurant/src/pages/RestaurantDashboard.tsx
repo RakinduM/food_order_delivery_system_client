@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DeleteConfirmationDialog } from '@/components/DeleteConfirmationDialog';
 import { useMenuItems } from '@/hooks/useMenuItems';
 import { MenuItemCard } from '@/components/MenuItemCard';
@@ -6,6 +6,7 @@ import { MenuItemDialog } from '@/components/MenuItemDialog';
 import { SearchBar } from '@/components/SearchBar';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Props {
     restaurantId: string;
@@ -22,11 +23,19 @@ export default function RestaurantDashboard({ restaurantId }: Props) {
         setSearchTerm,
         isLoading,
         error,
-        retry
+        retry,
     } = useMenuItems(restaurantId);
 
+    const { logout } = useAuth();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
+
+    useEffect(() => {
+        // Check if the user is logged in by verifying the presence of a token
+        const token = localStorage.getItem('token');
+        setIsLoggedIn(!!token);
+    }, []);
 
     const handleDeleteClick = (id: string, name: string) => {
         setItemToDelete({ id, name });
@@ -41,13 +50,26 @@ export default function RestaurantDashboard({ restaurantId }: Props) {
         }
     };
 
-    // const handleAvailabilityChange = async (id: string, isAvailable: boolean) => {
-    //     try {
-    //         await updateAvailability(id, isAvailable);
-    //     } catch (error) {
-    //         console.error('Error updating availability:', error);
-    //     }
-    // };
+    const handleLogout = () => {
+        logout();
+        setIsLoggedIn(false);
+    };
+
+    if (!isLoggedIn) {
+        return (
+            <div className="min-h-screen bg-gray-50 p-4 md:p-8 flex items-center justify-center">
+                <div className="text-center">
+                    <h2 className="text-xl font-medium text-gray-500 mb-4">You are not logged in</h2>
+                    <Button
+                        onClick={() => (window.location.href = '/login')} // Redirect to login page
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                        Login
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     if (isLoading) {
         return (
@@ -90,6 +112,12 @@ export default function RestaurantDashboard({ restaurantId }: Props) {
                                     Add New Item
                                 </Button>
                             </MenuItemDialog>
+                            <Button
+                                onClick={handleLogout}
+                                className="bg-red-600 hover:bg-red-700 text-white"
+                            >
+                                Logout
+                            </Button>
                         </div>
                     </div>
                 </header>
