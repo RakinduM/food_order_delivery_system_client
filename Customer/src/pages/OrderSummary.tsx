@@ -146,10 +146,10 @@ function PaymentForm({ total }: { total: number }) {
           restaurantId: restaurantId, // Restaurant ID
           status: "PLACED", // Order status
           totalAmount: total, // Total amount
-          customerLatitude: 6.902191, // Default latitude
-          customerLongitude: 80.087579, // Default longitude
-          restaurantLatitude: 6.913008, // Default latitude
-          restaurantLongitude: 80.095885, // Default longitude
+          customer_latitude: 6.902191, // Default latitude
+          customer_longitude: 80.087579, // Default longitude
+          restaurant_latitude: 6.913008, // Default latitude
+          restaurant_longitude: 80.095885, // Default longitude
           items: items.map((item) => ({
             menuItemId: item.id,
             name: item.name,
