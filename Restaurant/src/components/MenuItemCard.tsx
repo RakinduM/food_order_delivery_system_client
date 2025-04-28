@@ -69,7 +69,7 @@ export const MenuItemCard = ({
             <CardHeader>
                 <CardTitle className="flex justify-between items-start">
                     <span>{item.name}</span>
-                    <span className="text-green-600 font-bold">LKR {item.price.toFixed(2)}</span>
+                    <span className="text-green-600 font-bold">$ {item.price.toFixed(2)}</span>
                 </CardTitle>
                 <CardDescription>{item.description}</CardDescription>
             </CardHeader>
