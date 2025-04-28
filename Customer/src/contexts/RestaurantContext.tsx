@@ -1,5 +1,19 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
+
+interface MenuItem {
+  id: string;
+  restaurantId: string;
+  category: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+  portion: string;
+  is_available: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
 interface Restaurant {
   id: string;
@@ -15,7 +29,9 @@ interface Restaurant {
 interface RestaurantContextProps {
   restaurants: Restaurant[];
   getRestaurantById: (id: string) => Promise<Restaurant | null>;
-  isLoading: boolean;
+  getMenuItemsByRestaurantId: (restaurantId: string) => Promise<MenuItem[] | null>;
+  isLoadingRestaurants: boolean;
+  isLoadingMenuItems: boolean;
   error: string | null;
 }
 
@@ -24,17 +40,19 @@ const RestaurantContext = createContext<RestaurantContextProps | undefined>(
 );
 
 const API_URL = import.meta.env.VITE_API_URL;
+const API_MENU_URL = import.meta.env.VITE_API_MENU_URL;
 
 export const RestaurantProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingRestaurants, setIsLoadingRestaurants] = useState(false);
+  const [isLoadingMenuItems, setIsLoadingMenuItems] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch all restaurants
   const fetchRestaurants = async () => {
-    setIsLoading(true);
+    setIsLoadingRestaurants(true);
     setError(null);
     try {
       const { data } = await axios.get<Restaurant[]>(`${API_URL}/restaurant/`);
@@ -42,13 +60,13 @@ export const RestaurantProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch (err) {
       setError("Failed to fetch restaurants");
     } finally {
-      setIsLoading(false);
+      setIsLoadingRestaurants(false);
     }
   };
 
   // Fetch a restaurant by ID
   const getRestaurantById = async (id: string): Promise<Restaurant | null> => {
-    setIsLoading(true);
+    setIsLoadingRestaurants(true);
     setError(null);
     try {
       const { data } = await axios.get<Restaurant>(`${API_URL}/restaurant/${id}`);
@@ -57,9 +75,28 @@ export const RestaurantProvider: React.FC<{ children: React.ReactNode }> = ({
       setError("Failed to fetch restaurant details");
       return null;
     } finally {
-      setIsLoading(false);
+      setIsLoadingRestaurants(false);
     }
   };
+
+  // Fetch menu items by restaurant ID
+  const getMenuItemsByRestaurantId = useCallback(async (
+    restaurantId: string
+  ): Promise<MenuItem[] | null> => {
+    setIsLoadingMenuItems(true);
+    setError(null);
+    try {
+      const { data } = await axios.get<MenuItem[]>(
+        `${API_MENU_URL}/menu-items/restaurant/${restaurantId}`
+      );
+      return data;
+    } catch (err) {
+      setError("Failed to fetch menu items");
+      return null;
+    } finally {
+      setIsLoadingMenuItems(false);
+    }
+  }, []);
 
   useEffect(() => {
     fetchRestaurants();
@@ -67,7 +104,14 @@ export const RestaurantProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <RestaurantContext.Provider
-      value={{ restaurants, getRestaurantById, isLoading, error }}
+      value={{
+        restaurants,
+        getRestaurantById,
+        getMenuItemsByRestaurantId,
+        isLoadingRestaurants,
+        isLoadingMenuItems,
+        error,
+      }}
     >
       {children}
     </RestaurantContext.Provider>
