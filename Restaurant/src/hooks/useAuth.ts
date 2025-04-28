@@ -7,6 +7,7 @@ const API_URL = import.meta.env.VITE_API_AUTH_URL;
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [restaurantDetails, setRestaurantDetails] = useState<any | null>(null); // State to store restaurant details
   const navigate = useNavigate(); // Initialize the navigate function
 
   const login = async (email: string, password: string) => {
@@ -48,6 +49,21 @@ export const useAuth = () => {
     }
   };
 
+  const getRestaurantDetails = async (email: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { data } = await axios.get(`${API_URL}/restaurant/user/${email}`);
+      setRestaurantDetails(data); // Save restaurant details to state
+      return data;
+    } catch (err) {
+      setError("Failed to fetch restaurant details.");
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem("token"); // Remove token from localStorage
     localStorage.removeItem("email"); // Remove email from localStorage
@@ -58,8 +74,10 @@ export const useAuth = () => {
   return {
     login,
     register,
+    getRestaurantDetails,
     logout,
     isLoading,
     error,
+    restaurantDetails, // Expose restaurant details
   };
 };
