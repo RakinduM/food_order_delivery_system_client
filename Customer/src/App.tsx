@@ -1,35 +1,118 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Header } from "./components/Header";
+import { Categories } from "./restaurant/Categories";
+import { RestaurantList } from "./restaurant/RestaurantList";
+import { RestaurantDetail } from "./restaurant/RestaurantDetail";
+import { OrderSummary } from "./pages/OrderSummary"; // Import the OrderSummary component
+import { restaurants, categories } from "./utils/mockData";
+import { AuthProvider } from "./contexts/AuthContext";
+import { CartProvider } from "./contexts/CartContext";
+import { LoginModal } from "./auth/LoginModal";
+import { RegisterModal } from "./auth/RegisterModal";
+import { CartSidebar } from "./cart/CartSideBar";
+import { RestaurantProvider } from "./contexts/RestaurantContext";
+import { OrderProvider } from "./contexts/OrderContext";
+import { OrdersPage } from "./pages/OrderPage";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+function Home({
+  searchQuery,
+  selectedCategory,
+  setSelectedCategory,
+}: {
+  searchQuery: string;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
+}) {
+  const filteredRestaurants = restaurants.filter((restaurant) => {
+    const matchesCategory =
+      selectedCategory === "All" ||
+      restaurant.categories.includes(selectedCategory);
+    const matchesSearch =
+      searchQuery === "" ||
+      restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      restaurant.categories.some((category) =>
+        category.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    return matchesCategory && matchesSearch;
+  });
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <main className="max-w-6xl mx-auto px-4 py-6">
+      <Categories
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+      />
+      <RestaurantList restaurants={filteredRestaurants} />
+    </main>
+  );
 }
 
-export default App
+export function App() {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+  const handleLoginClick = () => {
+    setShowLogin(true);
+    setShowCart(false);
+  };
+  return (
+    <AuthProvider>
+      <RestaurantProvider>
+        <OrderProvider>
+        <CartProvider>
+          <BrowserRouter>
+            <div className="min-h-screen bg-gray-50">
+              <Header
+                onSearch={setSearchQuery}
+                onCartClick={() => setShowCart(true)}
+                onAuthClick={() => setShowLogin(true)}
+              />
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <Home
+                      searchQuery={searchQuery}
+                      selectedCategory={selectedCategory}
+                      setSelectedCategory={setSelectedCategory}
+                    />
+                  }
+                />
+                <Route path="/restaurant/:id" element={<RestaurantDetail />} />
+                <Route path="/orders" element={<OrdersPage />} />
+                <Route path="/order-summary/:id" element={<OrderSummary />} /> {/* New Route */}
+              </Routes>
+              {showLogin && (
+                <LoginModal
+                  onClose={() => setShowLogin(false)}
+                  onSwitchToRegister={() => {
+                    setShowLogin(false);
+                    setShowRegister(true);
+                  }}
+                />
+              )}
+              {showRegister && (
+                <RegisterModal
+                  onClose={() => setShowRegister(false)}
+                  onSwitchToLogin={() => {
+                    setShowRegister(false);
+                    setShowLogin(true);
+                  }}
+                />
+              )}
+              <CartSidebar
+                isOpen={showCart}
+                onClose={() => setShowCart(false)}
+                onLoginClick={handleLoginClick}
+              />
+            </div>
+          </BrowserRouter>
+        </CartProvider>
+        </OrderProvider>
+      </RestaurantProvider>
+    </AuthProvider>
+  );
+}
