@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { MapPinIcon, ClockIcon, ShoppingBagIcon, PhoneIcon, MessageSquareIcon, UserIcon } from 'lucide-react';
 import Map from '../components/Map';
 import { useDriver } from '../contexts/DriverContext';
+import axios from 'axios';
+
 // Mock order details
 const mockOrderDetails = {
   id: 'order123',
@@ -10,14 +12,11 @@ const mockOrderDetails = {
   restaurantAddress: '123 Kaluagglaa Rd, Mattegoda',
   customerName: 'James Sembu',
   customerAddress: '143, Pahathgama, Hanwella',
-  items: [{
-    name: 'Kottu',
-    quantity: 1
-  }, {
-    name: 'Ice Cream',
-    quantity: 1
-  }],
-  totalAmount: 89.00,
+  items: [
+    { name: 'Kottu', quantity: 1 },
+    { name: 'Ice Cream', quantity: 1 },
+  ],
+  totalAmount: 89.0,
   earnings: 8.5,
   distance: 5.3,
   estimatedTime: 25,
@@ -25,30 +24,48 @@ const mockOrderDetails = {
   timestamp: new Date(),
   coordinates: {
     pickup: [80.095885, 6.913008] as [number, number],
-    dropoff: [80.087579, 6.902191] as [number, number]
-  }
+    dropoff: [80.087579, 6.902191] as [number, number],
+  },
 };
+
 const OrderDetailPage = () => {
-  const {
-    id
-  } = useParams<{
-    id: string;
-  }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const {
-    completeOrder
-  } = useDriver();
+  const { completeOrder } = useDriver();
+
   // In a real app, this would fetch the order details based on the ID
   const order = mockOrderDetails;
-  const handleMarkPickedUp = () => {
-    // In a real app, this would update the order status
-    alert('Order marked as picked up');
+
+  const handleMarkPickedUp = async () => {
+    try {
+      // Make the API call to notify the customer that the order is on the way
+      await axios.post('http://localhost:8092/api/sms/send-order-on-the-way', null, {
+        params: { to: '0774820985' },
+      });
+      alert('Order marked as picked up and SMS sent successfully!');
+    } catch (error) {
+      console.error('Failed to send SMS:', error);
+      alert('Failed to mark as picked up or send SMS.');
+    }
   };
-  const handleMarkDelivered = () => {
-    completeOrder();
-    navigate('/');
+
+  const handleMarkDelivered = async () => {
+    try {
+      // Make the API call to notify the customer that the order is delivered
+      await axios.post('http://localhost:8092/api/sms/send-order-delivered', null, {
+        params: { to: '0774820985' },
+      });
+      alert('Delivery completed and SMS sent successfully!');
+      completeOrder();
+      navigate('/');
+    } catch (error) {
+      console.error('Failed to send SMS:', error);
+      alert('Failed to complete delivery or send SMS.');
+    }
   };
-  return <div className="flex flex-col h-full">
+
+  return (
+    <div className="flex flex-col h-full">
       <div className="h-64">
         <Map className="h-full" />
       </div>
@@ -65,9 +82,7 @@ const OrderDetailPage = () => {
               <MapPinIcon size={20} className="mr-2 text-green-500 flex-shrink-0" />
               <div>
                 <p className="font-medium">Pickup</p>
-                <p className="text-sm text-gray-400">
-                  {order.restaurantAddress}
-                </p>
+                <p className="text-sm text-gray-400">{order.restaurantAddress}</p>
               </div>
             </div>
             <div className="flex items-start">
@@ -94,14 +109,16 @@ const OrderDetailPage = () => {
             <h3 className="font-bold">Order Items</h3>
           </div>
           <ul className="space-y-2">
-            {order.items.map((item, index) => <li key={index} className="flex justify-between">
+            {order.items.map((item, index) => (
+              <li key={index} className="flex justify-between">
                 <div>
                   <span className="font-medium">
                     {item.quantity}x {item.name}
                   </span>
                   {item.notes && <p className="text-xs text-gray-400">{item.notes}</p>}
                 </div>
-              </li>)}
+              </li>
+            ))}
           </ul>
         </div>
         <div className="bg-gray-900 rounded-lg p-4 mb-4">
@@ -130,6 +147,8 @@ const OrderDetailPage = () => {
           </button>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default OrderDetailPage;
