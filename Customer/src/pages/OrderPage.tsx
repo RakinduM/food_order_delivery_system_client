@@ -13,23 +13,36 @@ export function OrdersPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-6xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h1 className="text-2xl font-bold mb-6">My Orders</h1>
-      {orders.map((order) => (
-        <div key={order.id} className="mb-4 border-b pb-4">
-          <h2 className="text-lg font-semibold">Order ID: {order.id}</h2>
-          <p>Status: {order.status}</p>
-          <p>Total Amount: ${order.totalAmount.toFixed(2)}</p>
-          <h3 className="font-semibold mt-2">Items:</h3>
-          <ul className="list-disc pl-5">
-            {order.items.map((item, index) => (
-              <li key={index}>
-                {item.name} - {item.quantity} x ${item.price.toFixed(2)}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      <table className="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border border-gray-300 px-4 py-2">Order ID</th>
+            <th className="border border-gray-300 px-4 py-2">Status</th>
+            <th className="border border-gray-300 px-4 py-2">Total Amount</th>
+            <th className="border border-gray-300 px-4 py-2">Items</th>
+          </tr>
+        </thead>
+        <tbody>
+          {orders.map((order) => (
+            <tr key={order.id} className="hover:bg-gray-50">
+              <td className="border border-gray-300 px-4 py-2">{order.id}</td>
+              <td className="border border-gray-300 px-4 py-2">{order.status}</td>
+              <td className="border border-gray-300 px-4 py-2">${order.totalAmount.toFixed(2)}</td>
+              <td className="border border-gray-300 px-4 py-2">
+                <ul className="list-disc ml-4">
+                  {order.items.map((item, index) => (
+                    <li key={index}>
+                      {item.name} - {item.quantity} x ${item.price.toFixed(2)}
+                    </li>
+                  ))}
+                </ul>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

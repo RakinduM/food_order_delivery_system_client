@@ -6,32 +6,26 @@ import { useDriver } from '../contexts/DriverContext';
 // Mock order details
 const mockOrderDetails = {
   id: 'order123',
-  restaurantName: 'Burger Palace',
-  restaurantAddress: '123 Main St, New York, NY',
-  customerName: 'John Smith',
-  customerAddress: '456 Park Ave, New York, NY',
-  customerPhone: '+1 (555) 123-4567',
+  restaurantName: 'Perera and Sons',
+  restaurantAddress: '123 Kaluagglaa Rd, Mattegoda',
+  customerName: 'James Sembu',
+  customerAddress: '143, Pahathgama, Hanwella',
   items: [{
-    name: 'Double Cheeseburger',
-    quantity: 1,
-    notes: 'No pickles'
+    name: 'Kottu',
+    quantity: 1
   }, {
-    name: 'French Fries',
-    quantity: 1,
-    notes: 'Extra ketchup'
-  }, {
-    name: 'Chocolate Shake',
+    name: 'Ice Cream',
     quantity: 1
   }],
-  totalAmount: 23.45,
+  totalAmount: 89.00,
   earnings: 8.5,
-  distance: 2.3,
+  distance: 5.3,
   estimatedTime: 25,
-  status: 'accepted' as const,
+  status: 'pending' as const,
   timestamp: new Date(),
   coordinates: {
-    pickup: [80.096057, 6.912862] as [number, number],
-    dropoff: [80.075460, 6.907513] as [number, number]
+    pickup: [80.095885, 6.913008] as [number, number],
+    dropoff: [80.087579, 6.902191] as [number, number]
   }
 };
 const OrderDetailPage = () => {
