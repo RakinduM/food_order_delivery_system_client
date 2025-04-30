@@ -47,7 +47,7 @@ const Sidebar: React.FC = () => {
           <div className="h-8 w-8 rounded-full bg-[#06C167] flex items-center justify-center text-white font-bold text-lg">
             E
           </div>
-          <span className="ml-2 text-xl font-semibold">EatsAdmin</span>
+          <span className="ml-2 text-xl font-semibold">FoodiFY Admin</span>
         </div>
       </div>
       <div className="flex-1 overflow-y-auto py-4">
