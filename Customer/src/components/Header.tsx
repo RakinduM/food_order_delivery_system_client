@@ -30,7 +30,7 @@ export function Header({ onSearch, onCartClick, onAuthClick }: HeaderProps) {
       <div className="max-w-6xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <button onClick={() => navigate("/")}><h1 className="text-2xl font-bold text-green-600">Foodify</h1></button>
+            <button onClick={() => navigate("/")}><h1 className="text-2xl font-bold text-green-600">FoodiFY</h1></button>
 
           </div>
           <div className="hidden md:flex items-center flex-1 mx-6 bg-gray-100 rounded-full px-4 py-2">

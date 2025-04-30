@@ -3,7 +3,6 @@ import { XIcon } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
-
 interface LoginModalProps {
   onClose: () => void;
   onSwitchToRegister: () => void;
@@ -25,16 +24,26 @@ export function LoginModal({ onClose, onSwitchToRegister }: LoginModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white shadow-2xl shadow-green-400 rounded-lg p-8 max-w-md w-full relative">
+    <div className="fixed inset-0 bg-gradient-to-br from-green-400 via-green-500 to-green-600 bg-opacity-90 flex items-center justify-center z-50">
+      <div className="bg-white shadow-2xl rounded-lg p-8 max-w-md w-full relative">
+        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
         >
           <XIcon className="h-6 w-6" />
         </button>
-        <h2 className="text-2xl font-bold mb-6">Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+
+        {/* Header */}
+        <h2 className="text-3xl font-extrabold text-center text-green-600 mb-6">
+          FoodiFY Restaurant Login
+        </h2>
+        <p className="text-center text-gray-600 mb-6">
+          Welcome back! Please login to manage your restaurant.
+        </p>
+
+        {/* Login Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -43,7 +52,8 @@ export function LoginModal({ onClose, onSwitchToRegister }: LoginModalProps) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
+              placeholder="Enter your email"
               required
             />
           </div>
@@ -55,7 +65,8 @@ export function LoginModal({ onClose, onSwitchToRegister }: LoginModalProps) {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
+              placeholder="Enter your password"
               required
             />
           </div>
@@ -64,17 +75,19 @@ export function LoginModal({ onClose, onSwitchToRegister }: LoginModalProps) {
           )}
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
+            className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition duration-300"
             disabled={isLoading}
           >
             {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
-        <p className="mt-4 text-center text-sm text-gray-600">
+
+        {/* Footer */}
+        <p className="mt-6 text-center text-sm text-gray-600">
           Don't have an account?{" "}
           <button
             onClick={onSwitchToRegister}
-            className="text-green-600 hover:text-green-700"
+            className="text-green-600 hover:text-green-700 font-medium"
           >
             Register
           </button>

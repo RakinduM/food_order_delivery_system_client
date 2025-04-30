@@ -25,7 +25,7 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-black flex flex-col justify-center px-4">
       <div className="mb-10 text-center">
-        <h1 className="text-3xl font-bold text-white mb-2">Uber Eats Driver</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">FoodiFY Driver</h1>
         <p className="text-gray-400">Sign in to start delivering</p>
       </div>
       <form onSubmit={handleLogin} className="space-y-4 max-w-md mx-auto w-full">

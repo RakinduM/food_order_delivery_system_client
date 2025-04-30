@@ -51,13 +51,9 @@ export function RegisterModal({
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      role="dialog"
-      aria-labelledby="register-modal-title"
-      aria-modal="true"
-    >
-      <div className="bg-white rounded-lg p-8 max-w-md w-full relative">
+    <div className="fixed inset-0 bg-gradient-to-br from-green-400 via-green-500 to-green-600 bg-opacity-90 flex items-center justify-center z-50">
+      <div className="bg-white shadow-2xl rounded-lg p-8 max-w-2xl w-full relative">
+        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
@@ -65,130 +61,157 @@ export function RegisterModal({
         >
           <XIcon className="h-6 w-6" />
         </button>
-        <h2 id="register-modal-title" className="text-2xl font-bold mb-6">
-          Register
+
+        {/* Header */}
+        <h2 className="text-3xl font-extrabold text-center text-green-600 mb-6">
+          FoodiFY Restaurant Registration
         </h2>
+        <p className="text-center text-gray-600 mb-6">
+          Join FoodiFY and start managing your restaurant today!
+        </p>
+
         {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
+
+        {/* Registration Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="resName"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Restaurant Name
-            </label>
-            <input
-              id="resName"
-              type="text"
-              value={resName}
-              onChange={(e) => setResName(e.target.value)}
-              ref={resNameInputRef}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="resName"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Restaurant Name
+              </label>
+              <input
+                id="resName"
+                type="text"
+                value={resName}
+                onChange={(e) => setResName(e.target.value)}
+                ref={resNameInputRef}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
+                placeholder="Enter your restaurant name"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="resAdmin"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Admin Name
+              </label>
+              <input
+                id="resAdmin"
+                type="text"
+                value={resAdmin}
+                onChange={(e) => setResAdmin(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
+                placeholder="Enter admin name"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="type"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Type
+              </label>
+              <input
+                id="type"
+                type="text"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
+                placeholder="Enter restaurant type"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="address"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Address
+              </label>
+              <input
+                id="address"
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
+                placeholder="Enter address"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
+                placeholder="Enter email"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="number"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Phone Number
+              </label>
+              <input
+                id="number"
+                type="tel"
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
+                placeholder="Enter phone number"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="busDoc"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Business Document
+              </label>
+              <input
+                id="busDoc"
+                type="file"
+                onChange={(e) => setBusDoc(e.target.files?.[0] || null)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
+                placeholder="Enter password"
+                required
+              />
+            </div>
           </div>
-          <div>
-            <label
-              htmlFor="resAdmin"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Admin Name
-            </label>
-            <input
-              id="resAdmin"
-              type="text"
-              value={resAdmin}
-              onChange={(e) => setResAdmin(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="type"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Type
-            </label>
-            <input
-              id="type"
-              type="text"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="address"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Address
-            </label>
-            <input
-              id="address"
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="number"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Phone Number
-            </label>
-            <input
-              id="number"
-              type="tel"
-              value={number}
-              onChange={(e) => setNumber(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="busDoc"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Business Document
-            </label>
-            <input
-              id="busDoc"
-              type="file"
-              onChange={(e) => setBusDoc(e.target.files?.[0] || null)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="isAvailable"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Is Available
-            </label>
+          <div className="flex items-center">
             <input
               id="isAvailable"
               type="checkbox"
@@ -196,37 +219,28 @@ export function RegisterModal({
               onChange={(e) => setIsAvailable(e.target.checked)}
               className="mr-2"
             />
-            <span>Available</span>
-          </div>
-          <div>
             <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              htmlFor="isAvailable"
+              className="text-sm font-medium text-gray-700"
             >
-              Password
+              Is Available
             </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
           </div>
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
+            className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition duration-300"
             disabled={isLoading}
           >
             {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
-        <p className="mt-4 text-center text-sm text-gray-600">
+
+        {/* Footer */}
+        <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
           <button
             onClick={onSwitchToLogin}
-            className="text-green-600 hover:text-green-700"
+            className="text-green-600 hover:text-green-700 font-medium"
           >
             Login
           </button>

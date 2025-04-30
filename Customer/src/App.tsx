@@ -36,18 +36,66 @@ function Home({
       );
     return matchesCategory && matchesSearch;
   });
+
   return (
     <main className="max-w-6xl mx-auto px-4 py-6">
+      {/* Banner Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {/* Banner Image 1 */}
+        <div className="relative">
+          <img
+            src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Delicious Foods 1"
+            className="w-full h-64 object-cover rounded-lg shadow-md"
+          />
+          <div className="absolute inset-0 bg-[#0012013a] flex items-center justify-center rounded-lg">
+            <h2 className="text-white text-xl font-bold text-center">
+              Fresh & Tasty
+            </h2>
+          </div>
+        </div>
+
+        {/* Banner Image 2 */}
+        <div className="relative">
+          <img
+            src="https://images.unsplash.com/photo-1526367790999-0150786686a2?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Delicious Foods 2"
+            className="w-full h-64 object-cover rounded-lg shadow-md"
+          />
+          <div className="absolute inset-0 bg-[#0012013a] flex items-center justify-center rounded-lg">
+            <h2 className="text-white text-xl font-bold text-center">
+              Quick Delivery
+            </h2>
+          </div>
+        </div>
+
+        {/* Banner Image 3 */}
+        <div className="relative">
+          <img
+            src="https://images.unsplash.com/photo-1631942195933-bbca808dee25?q=80&w=2900&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Delicious Foods 3"
+            className="w-full h-64 object-cover rounded-lg shadow-md"
+          />
+          <div className="absolute inset-0 bg-[#0012013a] flex items-center justify-center rounded-lg">
+            <h2 className="text-white text-xl font-bold text-center">
+              Explore Cuisines
+            </h2>
+          </div>
+        </div>
+      </div>
+
+      {/* Categories Section */}
       <Categories
         categories={categories}
         selectedCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}
       />
+
+      {/* Restaurant List Section */}
       <RestaurantList restaurants={filteredRestaurants} />
     </main>
   );
 }
-
 export function App() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -108,6 +156,15 @@ export function App() {
                 onClose={() => setShowCart(false)}
                 onLoginClick={handleLoginClick}
               />
+              {/* Footer Section */}
+              <footer className="bg-gray-800 text-white py-4">
+                  <div className="max-w-6xl mx-auto px-4 text-center">
+                    <p className="text-sm">
+                      © {new Date().getFullYear()} FoodiFY. All rights reserved.
+                    </p>
+                    <p className="text-sm mt-2">Made with ❤️ by FoodiFY Team.</p>
+                  </div>
+                </footer>
             </div>
           </BrowserRouter>
         </CartProvider>

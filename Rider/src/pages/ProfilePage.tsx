@@ -1,19 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'; // Import the AuthContext
-import { UserIcon, StarIcon, CarIcon, ShieldCheckIcon, BellIcon, HelpCircleIcon, LogOutIcon } from 'lucide-react';
+import { UserIcon, StarIcon, CarIcon, ShieldCheckIcon, BellIcon, HelpCircleIcon, LogOutIcon, BikeIcon } from 'lucide-react';
 
 // Mock driver data
 const mockDriverData = {
-  name: 'Alex Johnson',
-  email: 'alex.johnson@example.com',
+  name: 'Bananana Johnson',
+  email: 'bananadriver@gmail.com',
   phone: '(555) 123-4567',
   profileImage: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80',
   rating: 4.8,
   totalDeliveries: 342,
   vehicle: {
-    type: 'car',
-    model: 'Toyota Corolla',
+    type: 'bike',
+    model: 'Yamaha FZ-500',
     licensePlate: 'ABC 1234',
   },
 };
@@ -57,7 +57,7 @@ const ProfilePage = () => {
           </div>
         </div>
         <div className="p-4 flex items-center">
-          <CarIcon size={20} className="mr-4 text-gray-400" />
+          <BikeIcon size={20} className="mr-4 text-gray-400" />
           <div>
             <p className="text-sm text-gray-400">Vehicle</p>
             <p>
