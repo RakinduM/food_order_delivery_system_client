@@ -14,7 +14,7 @@ const Map: React.FC<MapProps> = ({ className = '' }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null); // Default to null
-  const { currentOrder } = useDriver();
+  const { currentOrder, sendDriverLocation } = useDriver();
   const userMarker = useRef<mapboxgl.Marker | null>(null); // Ref for the user's location marker
   const pickupMarker = useRef<mapboxgl.Marker | null>(null); // Ref for the pickup location marker
   const dropoffMarker = useRef<mapboxgl.Marker | null>(null); // Ref for the drop-off location marker
@@ -123,6 +123,8 @@ const Map: React.FC<MapProps> = ({ className = '' }) => {
               .setLngLat(newLocation)
               .addTo(map.current!);
           }
+
+          sendDriverLocation();
         },
         (error) => {
           console.error('Error getting user location:', error);

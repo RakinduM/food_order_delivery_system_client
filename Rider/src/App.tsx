@@ -19,29 +19,29 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 export function App() {
-  // useEffect(() => {
-  //   // Connect to WebSocket on app load
-  //   stompWebSocketService.connect((data) => {
-  //     console.log("Received from server:", data);
-  //   });
+  useEffect(() => {
+    // Connect to WebSocket on app load
+    stompWebSocketService.connect((data) => {
+      console.log("Received from server:", data);
+    });
 
-  //   return () => {
-  //     // Disconnect WebSocket on app unload
-  //     stompWebSocketService.disconnect();
-  //   };
-  // }, []);
+    return () => {
+      // Disconnect WebSocket on app unload
+      stompWebSocketService.disconnect();
+    };
+  }, []);
 
-  // const handleSend = () => {
-  //   stompWebSocketService.send("/app/send", {
-  //     content: "Hello from React",
-  //   });
-  // };
+  const handleSend = () => {
+    stompWebSocketService.send("/app/hello", {
+      content: "Hello from React",
+    });
+  };
 
   return (
     <AuthProvider>
       <BrowserRouter>
         <DriverProvider>
-          {/* <button onClick={handleSend}>Send Message</button> */}
+          <button onClick={handleSend}>Send Message</button>
           <Routes>
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />

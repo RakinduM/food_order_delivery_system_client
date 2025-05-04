@@ -1,6 +1,7 @@
-import React, { useState, createContext, useContext, ReactNode } from 'react';
-import { Order } from '../types/types';
-import { useAuth } from '../contexts/AuthContext'; // Import the AuthContext
+import React, { useState, createContext, useContext, ReactNode } from "react";
+import { Order } from "../types/types";
+import { useAuth } from "../contexts/AuthContext"; // Import the AuthContext
+import stompWebSocketService from "../utils/WebSocket";
 
 interface DriverContextType {
   isOnline: boolean;
@@ -8,6 +9,7 @@ interface DriverContextType {
   currentOrder: Order | null;
   acceptOrder: (order: Order) => void;
   completeOrder: () => void;
+  sendDriverLocation: () => void;
   earnings: number;
   orderHistory: Order[];
   driverId: string | null; // Add driverId to the context
@@ -18,7 +20,7 @@ const DriverContext = createContext<DriverContextType | undefined>(undefined);
 export const useDriver = () => {
   const context = useContext(DriverContext);
   if (context === undefined) {
-    throw new Error('useDriver must be used within a DriverProvider');
+    throw new Error("useDriver must be used within a DriverProvider");
   }
   return context;
 };
@@ -42,6 +44,28 @@ export const DriverProvider = ({ children }: DriverProviderProps) => {
 
   const acceptOrder = (order: Order) => {
     setCurrentOrder(order);
+
+    const assignPayload = {
+      orderId: order.id,
+      //driverId: driverId, // Replace with actual logged-in driver ID
+      restaurantLatitude: order.coordinates.pickup[1],
+      restaurantLongitude: order.coordinates.pickup[0],
+      customerLatitude: order.coordinates.dropoff[1],
+      customerLongitude: order.coordinates.dropoff[0],
+    };
+
+    // Subscribe to updates for this order
+    stompWebSocketService.subscribeToTopic(
+      `/topic/delivery/${order.id}`,
+      (msg) => {
+        console.log("Assignment update received:", msg);
+        // You can update state or UI here based on delivery assignment result
+        // e.g. setCurrentOrder(prev => ({ ...prev, status: msg.status }));
+      }
+    );
+
+    // Send assignment request to backend
+    stompWebSocketService.send("/app/delivery/assign-auto", assignPayload);
   };
 
   const completeOrder = () => {
@@ -53,8 +77,38 @@ export const DriverProvider = ({ children }: DriverProviderProps) => {
           completed: true,
         },
       ]);
+      stompWebSocketService.unsubscribeFromTopic(`/topic/delivery/${currentOrder.id}`);
       setEarnings(earnings + currentOrder.earnings);
       setCurrentOrder(null);
+
+    }
+  };
+
+  const sendDriverLocation = () => {
+    if (!driverId) {
+      console.error("Driver ID is not available.");
+      return;
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const locationPayload = {
+            driverId: driverId,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          };
+
+          // Send location to backend
+          stompWebSocketService.send("/app/driver/location", locationPayload);
+          console.log("Driver location sent:", locationPayload);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
     }
   };
 
@@ -66,6 +120,7 @@ export const DriverProvider = ({ children }: DriverProviderProps) => {
         currentOrder,
         acceptOrder,
         completeOrder,
+        sendDriverLocation,
         earnings,
         orderHistory,
         driverId, // Provide driverId in the context
