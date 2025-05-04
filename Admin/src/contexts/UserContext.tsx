@@ -29,6 +29,17 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [drivers, setDrivers] = useState<any[]>([]);
   const [restaurants, setRestaurants] = useState<any[]>([]);
 
+  // Get the token from localStorage
+  const token = localStorage.getItem("token");
+
+  // Axios instance with Authorization header
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:8089/api/admin",
+    headers: {
+      Authorization: `Bearer ${token}`, // Pass the JWT token in the Authorization header
+    },
+  });
+
   const fetchCustomers = async () => {
     try {
       const response = await axios.get("http://localhost:8089/api/admin/customers");
