@@ -51,13 +51,13 @@ import {
             password,
           }
         );
-  
+
         const token = response.data.token;
-        const user = response.data.username;
-  
+        const user = response.data.user; // Assuming `response.data.user` contains user details
+
         if (token) {
           localStorage.setItem("token", token);
-          localStorage.setItem("user", user);
+          localStorage.setItem("user", JSON.stringify(user)); // Serialize user as JSON
           setToken(token);
           setUser(user);
           navigate("/"); // Redirect to the home page

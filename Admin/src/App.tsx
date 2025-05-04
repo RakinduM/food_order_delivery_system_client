@@ -9,11 +9,13 @@ import Settings from './pages/Settings.tsx';
 import { AuthProvider } from './contexts/AuthContext.tsx';
 import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
+import { UserProvider } from './contexts/UserContext.tsx';
 
 export function App() {
   return (
     <Router>
       <AuthProvider>
+        <UserProvider>
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
@@ -29,6 +31,7 @@ export function App() {
             {/* Additional routes would go here */}
           </Route>
         </Routes>
+        </UserProvider>
       </AuthProvider>
     </Router>
   );
