@@ -4,11 +4,11 @@ import { useDriver } from '../contexts/DriverContext';
 import OrderCard from '../components/OrderCard';
 // Mock data for incoming order
 const mockIncomingOrder = {
-  id: '6811117360263900138ffd5a',
+  id: '68173866b63bfd00087ebdb6',
   restaurantName: 'Perera and Sons',
-  restaurantAddress: '123 Kaluagglaa Rd, Mattegoda',
+  restaurantAddress: '123 Kaluagglaa Rd, Kothalawa',
   customerName: 'James Sembu',
-  customerAddress: '143, Pahathgama, Hanwella',
+  customerAddress: '143, Pahathgama, Malabe',
   items: [{
     name: 'Kottu',
     quantity: 1
@@ -23,8 +23,8 @@ const mockIncomingOrder = {
   status: 'pending' as const,
   timestamp: new Date(),
   coordinates: {
-    pickup: [80.095885, 6.913008] as [number, number],
-    dropoff: [80.087579, 6.902191] as [number, number]
+    pickup: [79.977806, 6.923695] as [number, number],
+    dropoff: [79.962746, 6.905469] as [number, number]
   }
 };
 const HomePage = () => {

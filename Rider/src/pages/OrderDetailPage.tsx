@@ -7,11 +7,11 @@ import axios from 'axios';
 
 // Mock order details
 const mockOrderDetails = {
-  id: 'order123',
+  id: '68173866b63bfd00087ebdb6',
   restaurantName: 'Perera and Sons',
-  restaurantAddress: '123 Kaluagglaa Rd, Mattegoda',
+  restaurantAddress: '123 Kaluagglaa Rd, Kaduwela',
   customerName: 'James Sembu',
-  customerAddress: '143, Pahathgama, Hanwella',
+  customerAddress: '143, Pahathgama, Malabe',
   items: [
     { name: 'Kottu', quantity: 1 },
     { name: 'Ice Cream', quantity: 1 },
@@ -23,9 +23,9 @@ const mockOrderDetails = {
   status: 'pending' as const,
   timestamp: new Date(),
   coordinates: {
-    pickup: [80.095885, 6.913008] as [number, number],
-    dropoff: [80.087579, 6.902191] as [number, number],
-  },
+    pickup: [79.977806, 6.923695] as [number, number],
+    dropoff: [79.962746, 6.905469] as [number, number]
+  }
 };
 
 const OrderDetailPage = () => {
@@ -52,8 +52,11 @@ const OrderDetailPage = () => {
   const handleMarkDelivered = async () => {
     try {
       // Make the API call to notify the customer that the order is delivered
-      await axios.post('http://localhost:8092/api/sms/send-order-delivered', null, {
-        params: { to: '0774820985' },
+      // await axios.post('http://localhost:8092/api/sms/send-order-delivered', null, {
+      //   params: { to: '0774820985' },
+      // });
+      await axios.get('http://localhost:8092/api/notification/sendDeliverComplete', {
+        params: { toEmail: 'rakindumarambe17@gmail.com' },
       });
       alert('Delivery completed and SMS sent successfully!');
       completeOrder();

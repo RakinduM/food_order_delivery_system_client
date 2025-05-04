@@ -18,10 +18,10 @@ export function OrderSummary() {
   const { id: restaurantId } = useParams<{ id: string }>();
 
   // Default geo-coordinates
-  const customerLatitude = 6.902191;
-  const customerLongitude = 80.087579;
-  const restaurantLatitude = 6.913008;
-  const restaurantLongitude = 80.095885;
+  const customerLatitude = 6.905469;
+  const customerLongitude = 79.962746;
+  const restaurantLatitude = 6.923695;
+  const restaurantLongitude = 79.977806;
 
   // Order status
   const status = "Pending";
@@ -146,10 +146,10 @@ function PaymentForm({ total }: { total: number }) {
           restaurantId: restaurantId, // Restaurant ID
           status: "PLACED", // Order status
           totalAmount: total, // Total amount
-          customer_latitude: 6.902191, // Default latitude
-          customer_longitude: 80.087579, // Default longitude
-          restaurant_latitude: 6.913008, // Default latitude
-          restaurant_longitude: 80.095885, // Default longitude
+          customer_latitude: 6.905469, // Default latitude
+          customer_longitude: 79.962746, // Default longitude
+          restaurant_latitude: 6.923695, // Default latitude
+          restaurant_longitude: 79.977806, // Default longitude
           items: items.map((item) => ({
             menuItemId: item.id,
             name: item.name,
@@ -161,7 +161,7 @@ function PaymentForm({ total }: { total: number }) {
         console.log("Order created:", orderResponse.data);
 
         // Step 3: Redirect to the home page
-        navigate("/");
+        navigate("http://localhost:5174/");
       } else {
         console.error("Failed to create payment session:", message || "Unknown error");
         alert("Failed to create payment session. Please try again.");
